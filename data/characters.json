@@ -1,0 +1,7 @@
+{
+    "characters": [
+        { "id": "maxs", "name": "Drago", "type": "pc",  "folder": "Drago", "maxLP": 50, "maxGP": 50, "fabula": 3 },
+        { "id": "maxm",  "name": "Elfo",  "type": "pc",  "folder": "Elfo",  "maxLP": 50, "maxGP": 50, "fabula": 3 },
+        { "id": "jasper", "name": "Nerdi", "type": "pc",  "folder": "Nerdi", "maxLP": 50, "maxGP": 50, "fabula": 3 }
+    ]
+}

@@ -1,0 +1,40 @@
+{
+    "scenarios": [
+        {
+            "id": "goblin_ambush",
+            "name": "Goblin Ambush",
+            "background": "forest.png",
+            "music": "normal_battle"
+        },
+        {
+            "id": "forest_wolves",
+            "name": "Forest Wolves",
+            "background": "clearing.png",
+            "music": "normal_battle"
+        },
+        {
+            "id": "dragon",
+            "name": "Dragon",
+            "background": "battle1.png",
+            "music": "final_battle"
+        },
+        {
+            "id": "king",
+            "name": "Audience with the King",
+            "background": "throne_room.png",
+            "music": "tense_debate"
+        },
+        {
+            "id": "shop",
+            "name": "Shopkeep",
+            "background": "shop.png",
+            "music": "the_great_city"
+        },
+        {
+            "id": "cats",
+            "name": "Cat Room",
+            "background": "cat_room.png",
+            "music": "resting_scene"
+        }
+    ]
+}

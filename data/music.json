@@ -1,0 +1,43 @@
+{
+    "tracks": {
+        "main_theme": {
+            "file": "1. Fabula Ultima (Main Theme).mp3"
+        },
+        "overworld_travel": {
+            "file": "2. Per Caelum et Terram (Overworld Travel).mp3"
+        },
+        "normal_battle": {
+            "file": "3. Ignis! (Normal Battle).mp3"
+        },
+        "villain_scene": {
+            "file": "4. Res Obscura (Villain Scene).mp3"
+        },
+        "the_great_city": {
+            "file": "5. Prospera Urbs (The Great City).mp3"
+        },
+        "decisive_battle": {
+            "file": "6. Imperituri (Decisive Battle).mp3"
+        },
+        "tense_debate": {
+            "file": "7. Regis Concilium (Tense Debate).mp3"
+        },
+        "dungeon": {
+            "file": "8. Per Aspera (Dungeon).mp3"
+        },
+        "resting_scene": {
+            "file": "9. Numera Stellas (Resting Scene).mp3"
+        },
+        "countdown": {
+            "file": "10. Tempus Fugit (Countdown).mp3"
+        },
+        "tears_to_remember": {
+            "file": "11. Lacrimae (Tears to Remember).mp3"
+        },
+        "final_battle": {
+            "file": "12. Dies Irae (Final Battle).mp3"
+        },
+        "sacrifice": {
+            "file": "13. Fabula Aeterna (Sacrifice).mp3"
+        }
+    }
+}

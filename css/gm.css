@@ -1,0 +1,163 @@
+/* GM-Schaltfläche (448 x 900 px) mit Pixel-Art-Texturen aus assets/textures */
+
+:root {
+    --tint: #d99a2b;            /* ockergelb: Färbung aller *_grey-Texturen */
+    --tint-green: #4aa34f;
+    --tint-red: #cf4437;
+    --ink: #2b1d05;             /* Schriftfarbe auf den Buttons */
+}
+
+/* ---------- Färben per CSS ----------
+   Die Textur liegt per Multiplikation über der Farbe: helle Stellen zeigen die Farbe,
+   dunkle Stellen (Kanten, Schatten) färben stärker nach. brightness gleicht das mittlere
+   Grau der Dateien (204/255) wieder aus. Die Textur selbst begrenzt per Maske die Form,
+   so bleibt der 1 px breite transparente Rand erhalten. */
+.tex-1-1      { --tex: url("../assets/textures/button_1_1_grey.png"); }
+.tex-1-2      { --tex: url("../assets/textures/button_1_2_grey.png"); }
+.tex-1-3      { --tex: url("../assets/textures/button_1_3_grey.png"); }
+.tex-1-5      { --tex: url("../assets/textures/button_1_5_grey.png"); }
+.tex-1-6      { --tex: url("../assets/textures/button_1_6_grey.png"); }
+.tex-play     { --tex: url("../assets/textures/play_grey.png"); }
+.tex-status   { --tex: url("../assets/textures/status_box_grey.png"); }
+
+.tex {
+    position: relative;
+    isolation: isolate;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--ink);
+    font-size: 20px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+.tex::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--tint);
+    background-image: var(--tex);
+    background-size: 100% 100%;
+    background-blend-mode: multiply;
+    -webkit-mask-image: var(--tex);
+    mask-image: var(--tex);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    filter: brightness(1.25);
+    image-rendering: pixelated;
+}
+.tex.green { --tint: var(--tint-green); }
+.tex.red   { --tint: var(--tint-red); }
+.tex:disabled { cursor: not-allowed; }
+.tex:disabled::before { opacity: 0.45; filter: brightness(1.25) grayscale(0.5); }
+.tex:not(:disabled):not(.field):active::before { filter: brightness(1.1); }
+
+/* ---------- Layout ---------- */
+#panel { border: none; background: #1a1a1a; overflow: hidden; }
+#gm-panel { display: flex; flex-direction: column; height: 900px; }
+body:not(.is-gm) #gm-panel { display: none; }
+#party-panel { display: none; }
+
+.gm-row { display: flex; height: 64px; }
+.gm-gap { height: 8px; }
+.w1 { width: 64px; }
+.w2 { width: 128px; }
+.w3 { width: 192px; }
+.w5 { width: 320px; }
+.w6 { width: 384px; }
+.gm-row > * { height: 64px; flex-shrink: 0; }
+
+/* Icon-Buttons: Bild auf 64 x 64 px, ohne Weichzeichnen, Seitenverhältnis bleibt */
+.icon-btn {
+    margin: 0; padding: 0; width: 64px; height: 64px;
+    background: none; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+}
+.icon-btn img { width: 64px; height: 64px; object-fit: contain; image-rendering: pixelated; }
+.icon-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* Eingabefelder und Dropdowns liegen transparent auf der Textur */
+.field input, .field select, .now-playing {
+    width: 100%; height: 100%;
+    box-sizing: border-box;
+    padding: 0 12px;
+    border: none; outline: none;
+    background: transparent;
+    color: var(--ink);
+    font-size: 18px;
+}
+.field select { appearance: none; -webkit-appearance: none; text-align: center; text-align-last: center; cursor: pointer; }
+.field.small select { font-size: 12px; padding: 0 2px; }
+.field input { text-align: center; }
+.now-playing { display: flex; align-items: center; justify-content: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.tex-play { font-size: 0; }
+
+/* Toneinstellungen: Rest der Höhe (36 px) */
+#gm-sound-row { height: 36px; display: flex; align-items: center; }
+#gm-sound-row #music-controls { margin: 0; width: 100%; display: flex; align-items: center; padding: 0 8px; box-sizing: border-box; }
+#gm-sound-row #music-controls button { margin: 0 8px 0 0; padding: 0 6px; font-size: 18px; height: 30px; background: none; border: none; color: #fff; }
+#gm-sound-row #music-volume { flex: 1; }
+
+/* ---------- Statusboxen: 2 pro Reihe, 224 x 256 px, ohne Abstand ---------- */
+.gm-status-row { display: flex; height: 256px; }
+.gm-box { width: 224px; height: 256px; flex-shrink: 0; cursor: default; font-size: 16px; }
+
+.gm-box-name {
+    position: absolute; left: 8px; top: 0; width: 184px; height: 64px;
+    line-height: 64px; text-align: left; font-size: 20px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.gm-box-pencil {
+    position: absolute; left: 192px; top: 0; width: 32px; height: 64px;
+    margin: 0; padding: 0; background: none; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+}
+.gm-box-pencil img { max-width: 28px; max-height: 56px; object-fit: contain; image-rendering: pixelated; }
+
+.gm-box-portrait {
+    position: absolute; left: 1px; top: 65px; width: 128px; height: 128px;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.gm-box-portrait img { max-width: 100%; max-height: 100%; object-fit: scale-down; image-rendering: pixelated; }
+.gm-box-portrait.in-scene { box-shadow: inset 0 0 0 3px #2a9d3f; }
+.gm-box-portrait.disabled { cursor: not-allowed; }
+
+.gm-box-stats { position: absolute; left: 130px; top: 64px; width: 89px; height: 128px; }
+.gm-stat { height: 64px; line-height: 64px; font-size: 14px; text-align: center; white-space: nowrap; }
+.gm-stat.low { color: #7a1010; font-weight: bold; }
+
+.gm-box-foot { position: absolute; left: 5px; top: 192px; height: 64px; display: flex; align-items: center; }
+.gm-fabula-icon { width: 32px; height: 32px; image-rendering: pixelated; }
+.gm-fabula-input {
+    width: 32px; height: 32px; box-sizing: border-box; padding: 0;
+    text-align: center; font-size: 15px; background: rgba(255, 255, 255, 0.55);
+    color: var(--ink); border: 1px solid #5a4a20; -moz-appearance: textfield;
+}
+.gm-fabula-input::-webkit-outer-spin-button, .gm-fabula-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* Zugkarten: 64 x 64 px Buttons, Karte auf 64 px Höhe */
+.gm-card {
+    position: relative; width: 64px; height: 64px; margin: 0; padding: 0;
+    background: none; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+}
+.gm-card:first-of-type { margin-left: 16px; }
+.gm-card img { height: 64px; width: auto; image-rendering: pixelated; }
+.gm-card:disabled { cursor: not-allowed; opacity: 0.85; }
+.gm-plus { font-size: 44px; line-height: 64px; color: var(--ink); font-weight: bold; }
+
+/* Doppelpfeil am Sprite */
+.actor-flip {
+    position: absolute; top: -10px; left: -10px; margin: 0; padding: 0;
+    width: 28px; height: 28px; font-size: 16px;
+    background: #2b78d4; color: #fff; border: none; border-radius: 4px; display: none;
+}
+.actor.selected .actor-flip { display: block; }
+body:not(.is-gm) .actor-flip { display: none !important; }
+
+/* Keine Platzhalter-Hintergründe mehr hinter den Sprites (nur das Bild selbst) */
+.actor-body { border: none; }
+.actor-body.player, .actor-body.monster { background: none; }
+.round-label.clickable { cursor: pointer; }

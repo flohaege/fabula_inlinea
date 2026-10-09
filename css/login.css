@@ -1,0 +1,48 @@
+/* Startbildschirm und Charakterauswahl */
+
+#role-screen { overflow: auto; text-align: center; }
+
+#start-image {
+    display: block;
+    margin: 0 auto 16px;
+    max-width: 100%;               /* Originalgröße, nur verkleinert wenn nötig */
+    image-rendering: pixelated;
+}
+
+#character-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.login-card { display: flex; flex-direction: column; align-items: center; min-width: 140px; }
+
+/* Portrait mit 1 px Abstand und 4 px dickem gelbem Rahmen */
+.login-frame {
+    box-sizing: content-box;
+    min-width: 128px;
+    min-height: 128px;
+    padding: 1px;
+    border: 4px solid #ffd400;
+    background: #000;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login-frame img {
+    display: block;
+    max-width: 256px;
+    max-height: 256px;
+    object-fit: scale-down;        /* nie gestreckt */
+    image-rendering: pixelated;
+}
+.login-name { margin-top: 8px; font-size: 20px; cursor: pointer; }
+
+.login-pw { margin-top: 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.login-pw input { width: 140px; padding: 8px; font-size: 16px; }
+.login-pw .login-ok { margin: 0; padding: 6px 20px; font-size: 14px; }
+.login-card-error { color: #ff6b6b; min-height: 1.2em; font-size: 14px; }
