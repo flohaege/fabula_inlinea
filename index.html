@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JRPG TTRPG</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/panel.css">
+    <link rel="stylesheet" href="css/gm.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+
+    <div id="role-screen">
+
+        <!-- Start: Titelbild in Originalgröße, darunter die Rollenwahl -->
+        <div id="login-choose">
+            <img id="start-image" src="assets/textures/start_screen.png" alt="JRPG TTRPG">
+            <h1 id="start-title" class="hidden">JRPG TTRPG</h1>
+            <div>
+                <button id="player-role-button">PLAYER</button>
+                <button id="gm-role-button">GM</button>
+            </div>
+        </div>
+
+        <!-- Charakterauswahl: Portraits nebeneinander, Passwort erscheint unter dem gewählten -->
+        <div id="login-characters" class="hidden">
+            <div id="character-buttons"></div>
+            <button id="login-back-characters">ZURÜCK</button>
+        </div>
+
+        <!-- GM-Passwort -->
+        <div id="login-password" class="hidden">
+            <p id="login-who"></p>
+            <input id="password-input" type="password" placeholder="Passwort">
+            <p id="login-error"></p>
+            <button id="login-submit">ANMELDEN</button>
+            <button id="login-back">ZURÜCK</button>
+        </div>
+    </div>
+
+
+    <!-- Spielbildschirm: fester 1920 x 960 Bereich ("stage"), wird passend skaliert -->
+    <main id="game-screen" class="hidden">
+        <div id="stage">
+
+            <!-- oberer Rand (30 px) -->
+            <div id="top-strip">
+                <span id="scenario-name"></span>
+                <div id="user-bar">
+                    Angemeldet als <strong id="who-am-i"></strong>
+                    <button id="logout-button">ABMELDEN</button>
+                </div>
+            </div>
+
+            <!-- Schaltfläche: 448 x 900 px, links -->
+            <aside id="panel">
+
+                <!-- Spieler-Oberfläche: Charakter-Status-Box und Party-Status-Box -->
+                <div id="player-panel">
+                    <div id="pl-main"></div>
+                    <div id="pl-companions"></div>
+                    <div id="pl-sound-row"></div>
+                </div>
+
+                <!-- GM-Oberfläche (448 x 900 px), Texturen aus assets/textures -->
+                <div id="gm-panel" class="hidden">
+
+                    <!-- 1: Weltkarte, neue Runde, Konflikt -->
+                    <div class="gm-row">
+                        <button id="overworld-button" class="tex tex-1-3 w3">Weltkarte</button>
+                        <button id="new-round-button" class="icon-btn" title="Neue Runde" disabled>
+                            <img src="assets/textures/hourglass.png" alt="Neue Runde">
+                        </button>
+                        <button id="conflict-button" class="tex tex-1-3 w3 green" disabled>Konflikt</button>
+                    </div>
+                    <div class="gm-gap"></div>
+
+                    <!-- 3: Uhr erstellen -->
+                    <div class="gm-row">
+                        <button id="clock-create-button" class="icon-btn" title="Uhr erstellen">
+                            <img src="assets/textures/clock.png" alt="Uhr">
+                        </button>
+                        <div class="tex tex-1-5 w5 field">
+                            <input id="clock-title-field" type="text" maxlength="40" aria-label="Titel der Uhr">
+                        </div>
+                        <div class="tex tex-1-1 w1 field">
+                            <select id="clock-size-select" aria-label="Segmente">
+                                <option>4</option><option selected>6</option><option>8</option>
+                                <option>10</option><option>12</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="gm-gap"></div>
+
+                    <!-- 5: Helfer, Name, Sprite-Datei, Klasse, Gegner -->
+                    <div class="gm-row">
+                        <button id="helper-button" class="icon-btn" title="Helfer hinzufügen (links)">
+                            <img src="assets/textures/coin.png" alt="Helfer">
+                        </button>
+                        <div class="tex tex-1-2 w2 field">
+                            <input id="actor-name-input" type="text" maxlength="30" aria-label="Name">
+                        </div>
+                        <div class="tex tex-1-2 w2 field">
+                            <input id="actor-sprite-input" type="text" maxlength="40"
+                                   title="Bilddatei in NPCs oder Monster (leer = wie der Name)" aria-label="Sprite-Datei">
+                        </div>
+                        <div class="tex tex-1-1 w1 field small">
+                            <select id="actor-class-select" aria-label="Klasse">
+                                <option value="soldier">Soldat</option>
+                                <option value="elite">Elite</option>
+                                <option value="champion">Champion</option>
+                                <option value="champion_plus">Champion+</option>
+                            </select>
+                        </div>
+                        <button id="enemy-button" class="icon-btn" title="Gegner hinzufügen (rechts)">
+                            <img src="assets/textures/skull.png" alt="Gegner">
+                        </button>
+                    </div>
+                    <div class="gm-gap"></div>
+
+                    <!-- 7: Statusboxen der Party (2 x 2) -->
+                    <div id="gm-status-1" class="gm-status-row"></div>
+                    <div id="gm-status-2" class="gm-status-row"></div>
+                    <div class="gm-gap"></div>
+
+                    <!-- 9: Musik -->
+                    <div class="gm-row">
+                        <button id="music-play-button" class="tex tex-play w1" title="Gewählten Titel abspielen"></button>
+                        <div class="tex tex-1-3 w3 field">
+                            <select id="music-select" aria-label="Neuer Titel"></select>
+                        </div>
+                        <div class="tex tex-1-3 w3 field">
+                            <div id="music-current" class="now-playing">–</div>
+                        </div>
+                    </div>
+
+                    <!-- 10: Toneinstellungen (der Regler zieht beim GM hierher um) -->
+                    <div id="gm-sound-row"></div>
+
+                    <!-- 11: Szenarien -->
+                    <div class="gm-row">
+                        <div class="tex tex-1-6 w6 field">
+                            <select id="scenario-select" aria-label="Szenario"></select>
+                        </div>
+                        <button id="scenario-play-button" class="tex tex-play w1" title="Szenario laden"></button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Kartenfläche: 1440 x 900 px, rechts -->
+            <section id="map-area">
+                <div id="game-view"></div>
+                <div id="clocks-container"></div>
+            </section>
+
+            <!-- unterer Rand (30 px) -->
+            <div id="bottom-strip">
+                <div id="music-controls">
+                    <button id="music-mute-button">🔊</button>
+                    <input id="music-volume" type="range" min="0" max="100" value="50">
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+
+    <script type="module" src="js/main.js"></script>
+
+</body>
+
+</html>
