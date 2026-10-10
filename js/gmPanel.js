@@ -63,7 +63,8 @@ function buildBlock(c) {
     const stats = el("div", "gm-box-stats");
     const lp = el("div", "gm-stat");
     const gp = el("div", "gm-stat");
-    stats.append(lp, gp);
+    const ip = el("div", "gm-stat");
+    stats.append(lp, gp, ip);
     root.appendChild(stats);
 
     // Fabula-Punkte (32 x 32 Symbol, 32 x 32 Zahlenfeld)
@@ -117,7 +118,7 @@ function buildBlock(c) {
         }
     });
 
-    return { root, id: c.id, lp, gp, input, portrait, card1, card1img, card2, card2img, plus };
+    return { root, id: c.id, lp, gp, ip, input, portrait, card1, card1img, card2, card2img, plus };
 }
 
 // Statusboxen neu aufbauen, wenn sich die Party ändert
@@ -157,6 +158,7 @@ export function renderGmPanel(game) {
         b.lp.textContent = `LP ${st.lp}/${st.maxLP}`;
         b.lp.classList.toggle("low", isLowHP(st));
         b.gp.textContent = `GP ${st.gp}/${st.maxGP}`;
+        b.ip.textContent = `IP ${st.ip}/${st.maxIP}`;
         if (document.activeElement !== b.input) b.input.value = st.fabula;
         b.portrait.classList.toggle("in-scene", actors.some((a) => a.charId === b.id));
         b.portrait.classList.toggle("disabled", !inScenario);

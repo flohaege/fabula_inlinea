@@ -1,10 +1,8 @@
 import { sprites } from "./assets.js";
+import { EFFECT_POSITIONS } from "./config.js";
 import { getCharacter } from "./characters.js";
 
-const EFFECT_MS = 1000;   // how long attack/spell/heal effects stay on screen
-
-// Angriff und Zauber erscheinen auf der rechten, Heilung auf der linken Bildhälfte
-const SIDE = { attack: "right", spell: "right", heal: "left" };
+const EFFECT_MS = 1000;   // so lange bleibt ein Effekt sichtbar (für alle gleich)
 const LABEL = { attack: "⚔ Angriff", spell: "✦ Zauber", heal: "✚ Heilung" };
 
 let initialized = false;
@@ -29,11 +27,17 @@ export function handleEffect(game) {
 
 function play(effect) {
     const scene = document.querySelector(".scene");
-    if (!scene || !SIDE[effect.kind]) return;      // nur in Szenarien
+    const position = EFFECT_POSITIONS[effect.kind];
+    if (!scene || !position) return;               // nur in Szenarien
 
     const character = getCharacter(effect.id);
+
+    // Lage im Dummy: untere linke bzw. rechte Ecke und feste Breite (config.js)
     const overlay = document.createElement("div");
-    overlay.className = `effect-overlay ${SIDE[effect.kind]}`;
+    overlay.className = "effect-overlay";
+    overlay.style[position.side === "left" ? "left" : "right"] = `${position.x}px`;
+    overlay.style.bottom = `${position.y}px`;
+    overlay.style.width = `${position.width}px`;
 
     const img = document.createElement("img");
     if (character && character.folder) {

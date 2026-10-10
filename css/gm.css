@@ -124,8 +124,11 @@ body:not(.is-gm) #gm-panel { display: none; }
 .gm-box-portrait.in-scene { box-shadow: inset 0 0 0 3px #2a9d3f; }
 .gm-box-portrait.disabled { cursor: not-allowed; }
 
-.gm-box-stats { position: absolute; left: 130px; top: 64px; width: 89px; height: 128px; }
-.gm-stat { height: 64px; line-height: 64px; font-size: 14px; text-align: center; white-space: nowrap; }
+.gm-box-stats {
+    position: absolute; left: 130px; top: 64px; width: 89px; height: 128px;
+    display: flex; flex-direction: column; justify-content: center;   /* LP, GP, IP eng untereinander, mittig */
+}
+.gm-stat { height: 32px; line-height: 32px; font-size: 14px; text-align: center; white-space: nowrap; }
 .gm-stat.low { color: #7a1010; font-weight: bold; }
 
 .gm-box-foot { position: absolute; left: 5px; top: 192px; height: 64px; display: flex; align-items: center; }

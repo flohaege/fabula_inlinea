@@ -78,12 +78,31 @@
 }
 #clocks-container { z-index: 5; }
 
-/* Szenariobild: vollständig sichtbar, Seitenverhältnis bleibt (Größe setzt scene.js) */
+/* Szenen-Dummy: immer 1440 x 900 px, schwarz. Das Hintergrundbild wird darin eingepasst,
+   kleine Bilder werden ohne Weichzeichnen hochskaliert, nichts wird zugeschnitten. */
+.scene { position: relative; background: #000; }
 .scenario-background {
     display: block;
     width: 100%;
     height: 100%;
+    object-fit: contain;
+    object-position: center;
     image-rendering: pixelated;
+}
+
+/* Sprites: im quadratischen Feld eingepasst (nie gestreckt), kleine werden hochskaliert, unten bündig */
+.actor-body img {
+    object-fit: contain;
+    object-position: center bottom;
+    image-rendering: pixelated;
+}
+.actor-body.low-hp::after {
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    mask-position: center bottom;
+    -webkit-mask-position: center bottom;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
 }
 
 /* Overworld: Ebene mit Karte und Markern, wird für die Kamera verschoben */
@@ -92,15 +111,10 @@
 /* Fog of War: Schleier über der Overworld-Karte (Zeichnung in overworld.js) */
 .fog-layer { position: absolute; left: 0; top: 0; pointer-events: none; image-rendering: pixelated; }
 
-/* Effekte (Angriff, Zauber, Heilung) über dem Szenariobild */
-.effect-overlay {
-    position: absolute; top: 0; height: 100%; width: 50%; z-index: 4;
-    display: flex; align-items: center; justify-content: center;
-    pointer-events: none;
-}
-.effect-overlay.left { left: 0; }
-.effect-overlay.right { right: 0; }
-.effect-overlay img { max-width: 100%; max-height: 100%; object-fit: scale-down; image-rendering: pixelated; }
+/* Effekte (Angriff, Zauber, Heilung): Lage und Breite setzt effects.js aus config.js (EFFECT_POSITIONS),
+   das GIF füllt die Breite, Höhe nach Seitenverhältnis, ohne Weichzeichnen */
+.effect-overlay { position: absolute; z-index: 4; pointer-events: none; }
+.effect-overlay img { display: block; width: 100%; height: auto; image-rendering: pixelated; }
 .effect-label {
     padding: 8px 24px; font-size: 40px; border-radius: 8px;
     background: rgba(0, 0, 0, 0.6); text-shadow: 0 0 6px #000;

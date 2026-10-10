@@ -1,6 +1,6 @@
 import { images, sprites } from "./assets.js";
-import { SPRITE_SIZES, MAX_PER_SIDE, RANK_TURNS, RANK_SLOTS, TILE_SIZE, MAP_AREA } from "./config.js";
-import { isGM } from "./role.js";
+import { SPRITE_SIZES, MAX_PER_SIDE, RANK_TURNS, TILE_SIZE, MAP_AREA, START_POSITIONS } from "./config.js";
+import { isGM, getCharacterId } from "./role.js";
 import { setActors, setConflict } from "./gameState.js";
 import { getCharacters, getCharacter, stateOf, isLowHP, idleUrl } from "./characters.js";
 
@@ -8,27 +8,27 @@ const gameView = document.getElementById("game-view");
 
 let scene = null;
 let bg = null;
-let scale = 1;
 let selectedId = null;   // nur lokal beim GM
 let lastGame = null;
 
 // ---------- Aufbau ----------
 
+// Die Szene ist ein "Dummy": immer 1440 x 900 px (schwarz). Hintergrundbild, Sprites und
+// Effekte werden an ihm ausgerichtet; die Größe des Hintergrundbildes spielt keine Rolle.
+// (Das Verkleinern des Browserfensters übernimmt die Bühnenskalierung, siehe stage.js.)
 export function buildScene(scenario) {
     gameView.innerHTML = "";
     selectedId = null;
 
     scene = document.createElement("div");
     scene.className = "scene";
+    scene.style.width = `${MAP_AREA.width}px`;
+    scene.style.height = `${MAP_AREA.height}px`;
 
+    // Bild wird eingepasst (nie zugeschnitten), kleine Bilder per nearest neighbor hochskaliert
     bg = document.createElement("img");
     bg.className = "scenario-background";
     bg.src = `${images}/${scenario.background}`;
-    bg.addEventListener("load", () => {
-        fitScene();
-        updateScale();
-    });
-    new ResizeObserver(updateScale).observe(bg);
 
     // Verschieben nur mit Shift+Klick oder Doppelklick auf freie Fläche
     scene.addEventListener("click", (event) => {
@@ -41,20 +41,9 @@ export function buildScene(scenario) {
     gameView.appendChild(scene);
 }
 
-// Bild vollständig und mittig in die Kartenfläche einpassen (Seitenverhältnis bleibt)
-function fitScene() {
-    const s = Math.min(MAP_AREA.width / bg.naturalWidth, MAP_AREA.height / bg.naturalHeight);
-    const w = bg.naturalWidth * s;
-    const h = bg.naturalHeight * s;
-    scene.style.width = `${w}px`;
-    scene.style.height = `${h}px`;
-    scene.style.margin = `${(MAP_AREA.height - h) / 2}px auto 0`;
-}
-
-function updateScale() {
-    if (!bg || !bg.naturalWidth) return;
-    scale = bg.clientWidth / bg.naturalWidth;
-    renderActors(lastGame);
+// Der GM bewegt alle, ein Spieler nur den eigenen Avatar
+function canControl(actor) {
+    return isGM() || (!!actor.charId && actor.charId === getCharacterId());
 }
 
 // ---------- Darstellung ----------
@@ -66,10 +55,10 @@ export function renderActors(game) {
     scene.querySelectorAll(".actor, .round-label").forEach((el) => el.remove());
 
     // Weiter oben stehende Sprites zuerst, damit untere davor liegen
-    const unit = TILE_SIZE * scale;
+    const unit = TILE_SIZE;
     (game.actors || []).slice().sort((a, b) => b.gy - a.gy).forEach((actor) => {
         const sizeKey = actor.rank || "player";
-        const size = (SPRITE_SIZES[sizeKey] || 64) * scale;
+        const size = SPRITE_SIZES[sizeKey] || 64;   // feste Größe im Dummy
 
         const el = document.createElement("div");
         el.className = "actor";
@@ -81,6 +70,7 @@ export function renderActors(game) {
             el.style.left = `${actor.gx * unit}px`;
         }
         el.style.bottom = `${actor.gy * unit}px`;
+        el.style.cursor = canControl(actor) ? "pointer" : "default";
         el.style.width = `${size}px`;
         el.style.height = `${size}px`;
 
@@ -143,7 +133,7 @@ export function renderActors(game) {
 
         el.addEventListener("click", (event) => {
             event.stopPropagation();
-            if (!isGM()) return;
+            if (!canControl(actor)) return;
             selectedId = selectedId === actor.id ? null : actor.id;
             renderActors(lastGame);
         });
@@ -229,19 +219,19 @@ function buildTurns(actor) {
     return wrap;
 }
 
-// GM: Shift+Klick bzw. Doppelklick auf freie Fläche setzt den gewählten Sprite dorthin (Mitte = Klickpunkt)
+// GM (alle) bzw. Spieler (eigener Avatar): Shift+Klick bzw. Doppelklick auf freie Fläche setzt den gewählten Sprite dorthin (Mitte = Klickpunkt)
 function moveSelected(event) {
-    if (!isGM() || !selectedId || !lastGame) return;
+    if (!selectedId || !lastGame) return;
 
     const actor = (lastGame.actors || []).find((a) => a.id === selectedId);
-    if (!actor) return;
+    if (!actor || !canControl(actor)) return;
 
-    const rect = bg.getBoundingClientRect();
-    // rect ist nach der Bühnen-Skalierung gemessen, daher eigener Faktor
-    const k = rect.width / bg.naturalWidth;
-    const px = (event.clientX - rect.left) / k;   // Originalpixel, von links
-    const py = (rect.bottom - event.clientY) / k; // Originalpixel, von unten
-    const size = SPRITE_SIZES[actor.type === "player" ? "player" : actor.rank];
+    // rect ist nach der Bühnen-Skalierung gemessen, daher Faktor Bildschirm -> Dummy
+    const rect = scene.getBoundingClientRect();
+    const k = rect.width / MAP_AREA.width;
+    const px = (event.clientX - rect.left) / k;    // Dummy-Pixel von links
+    const py = (rect.bottom - event.clientY) / k;  // Dummy-Pixel von unten
+    const size = SPRITE_SIZES[actor.rank || "player"];
 
     const gx = Math.max(0, (px - size / 2) / TILE_SIZE);
     const gy = Math.max(0, (py - size / 2) / TILE_SIZE);
@@ -255,28 +245,33 @@ function moveSelected(event) {
 
 // ---------- Akteure erzeugen ----------
 
-// Standardposition (Felder, 0:0 = unten links, Sprite sitzt mit der
-// unteren Ecke auf dem Feld). Versatz-Muster der Plätze: 1:1, 2:2, 1:3, 2:4.
-// Ein Elite belegt 2 Plätze, ein Champion 3: er steht auf dem ersten
-// freien Platz und "verdrängt" die folgenden.
-// Spieler zählen von links, Monster gespiegelt von rechts.
-function slotsOf(actor) {
-    return RANK_SLOTS[actor.rank] || 1;
-}
+// Standardposition: Pixel im 1440 x 900 Dummy, die Werte stehen in config.js (START_POSITIONS).
+// Spieler/Helfer zählen von links, Gegner gespiegelt von rechts (gemessen wird die untere Ecke).
+// Soldat/Spieler: n-ter Platz der Seite. Elite/Champion: feste Plätze, je nachdem ob schon
+// ein Soldat oder Elite auf der Seite steht.
 
 // opts: { rank, turns, charId, spriteFile }
 export function makeActor(actors, type, name, opts = {}) {
     const sameSide = actors.filter((a) => a.type === type);
     if (sameSide.length >= MAX_PER_SIDE) return null;
 
-    // Erster freier Platz = Summe der bereits belegten Plätze (max. Platz 4)
-    const used = sameSide.reduce((sum, a) => sum + slotsOf(a), 0);
-    const n = Math.min(used, 3);
-
-    // Elite/Champion: etwas Luft nach unten, damit der Name lesbar bleibt
     const rank = opts.rank || null;
-    const big = rank && rank !== "soldier";
-    const gap = big && n > 0 ? 0.5 : 0;
+    const P = START_POSITIONS;
+    const isSmall = (a) => !a.rank || a.rank === "soldier";
+
+    let position;
+    if (rank === "elite") {
+        const taken = sameSide.some((a) => isSmall(a) || a.rank === "elite");
+        position = taken ? P.elite.other : P.elite.first;
+    } else if (rank === "champion") {
+        const taken = sameSide.some((a) => isSmall(a) || a.rank === "elite" || a.rank === "champion");
+        position = taken ? P.champion.other : P.champion.first;
+    } else {
+        const list = type === "player" ? P.player : P.soldier;
+        const index = Math.min(sameSide.filter(isSmall).length, list.length - 1);
+        position = list[index];
+    }
+    const [x, y] = position;
 
     return [
         ...actors,
@@ -288,8 +283,8 @@ export function makeActor(actors, type, name, opts = {}) {
             spriteFile: opts.spriteFile || null,
             rank,
             turns: opts.turns ?? (rank ? RANK_TURNS[rank] : 1),
-            gx: 1 + (n % 2),
-            gy: 1 + n + gap,
+            gx: x / TILE_SIZE,                      // gespeichert in Feldern zu 64 px
+            gy: y / TILE_SIZE,
             fromRight: type === "monster"
         }
     ];

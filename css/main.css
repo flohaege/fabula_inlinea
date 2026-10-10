@@ -4,7 +4,7 @@ body {
     color: white;
     font-family: sans-serif;
 }
-
+button, input, select, textarea { font-family: inherit; }
 button {
     padding: 12px 20px;
     margin: 5px;
