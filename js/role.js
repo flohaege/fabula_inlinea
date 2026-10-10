@@ -8,6 +8,5 @@ export function setSession(newRole, newCharacterId = null) {
     // CSS-Klasse, damit GM-only-Elemente sichtbar werden
     document.body.classList.toggle("is-gm", newRole === "gm");
 }
-export function getRole() { return role; }
 export function getCharacterId() { return characterId; }
 export function isGM() { return role === "gm"; }

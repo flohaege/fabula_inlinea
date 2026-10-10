@@ -257,12 +257,11 @@ function acceptMove() {
         if (!arrived) setMoveRequest(req.x, req.y);
     });
 }
-
-export function isValidTile(x, y) {
+function isValidTile(x, y) {
     return x >= 0 && x < mapWidth && y >= 0 && y < mapHeight;
 }
 
-export function stepToward(x, y, targetX, targetY) {
+function stepToward(x, y, targetX, targetY) {
     return {
         x: x + Math.sign(targetX - x),
         y: y + Math.sign(targetY - y)

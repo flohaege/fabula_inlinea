@@ -163,4 +163,3 @@ body:not(.is-gm) .actor-flip { display: none !important; }
 /* Keine Platzhalter-Hintergründe mehr hinter den Sprites (nur das Bild selbst) */
 .actor-body { border: none; }
 .actor-body.player, .actor-body.monster { background: none; }
-.round-label.clickable { cursor: pointer; }

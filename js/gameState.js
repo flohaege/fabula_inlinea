@@ -115,11 +115,6 @@ export function setCharacterState(id, patch) {
     return update({ chars: { [id]: patch } });
 }
 
-// Welche Charaktere gehören zur Party (Liste von IDs)
-export function setParty(ids) {
-    return update({ party: ids });
-}
-
 // Musik für alle setzen: Schlüssel aus music.json, Dateiname, Link oder null (aus)
 export function setMusic(track) {
     return update({ music: track });

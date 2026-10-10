@@ -18,7 +18,6 @@ const firebaseConfig = {
   appId: "1:894995545457:web:2b6824bf7dab6840e68ad0"
 };
 
-export const app = initializeApp(firebaseConfig);
 // Anmeldung gilt nur für diesen Browser-Tab (nicht für alle Tabs/Fenster).
 // So kannst du in zwei Tabs gleichzeitig als GM und als Player testen.
 // Nachteil: Nach dem Schließen des Tabs muss man sich neu anmelden.

@@ -55,7 +55,6 @@
 #gm-controls { margin: 0; padding: 8px; text-align: left; }
 #gm-controls button { padding: 8px 12px; font-size: 14px; }
 #party-panel { justify-content: flex-start; margin: 8px; gap: 8px; }
-#party-panel .char-card { width: 200px; }
 #music-picker { margin: 8px 0; }
 #music-picker input[type="text"] { width: 200px; }
 

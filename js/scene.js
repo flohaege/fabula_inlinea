@@ -251,7 +251,7 @@ function moveSelected(event) {
 // ein Soldat oder Elite auf der Seite steht.
 
 // opts: { rank, turns, charId, spriteFile }
-export function makeActor(actors, type, name, opts = {}) {
+function makeActor(actors, type, name, opts = {}) {
     const sameSide = actors.filter((a) => a.type === type);
     if (sameSide.length >= MAX_PER_SIDE) return null;
 
@@ -427,7 +427,7 @@ export function addCharacterToScene(charId) {
 // ---------- Runden ----------
 
 // Neue Runde: alle Kreise gefüllt, alle Spielercharaktere wieder auf GO
-export function startNextRound(game) {
+function startNextRound(game) {
     if (!game || !game.conflict || !game.conflict.active) return;
     const reset = (game.actors || []).map((a) => ({ ...a, used: 0 }));
     setConflict({ active: true, round: game.conflict.round + 1 }, reset, resetTurns(game));
