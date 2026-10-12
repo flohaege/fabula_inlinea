@@ -18,6 +18,7 @@ const firebaseConfig = {
   appId: "1:894995545457:web:2b6824bf7dab6840e68ad0"
 };
 
+const app = initializeApp(firebaseConfig);
 // Anmeldung gilt nur für diesen Browser-Tab (nicht für alle Tabs/Fenster).
 // So kannst du in zwei Tabs gleichzeitig als GM und als Player testen.
 // Nachteil: Nach dem Schließen des Tabs muss man sich neu anmelden.
@@ -26,7 +27,7 @@ export const db = getFirestore(app);
 
 // Jede Person hat ein Konto "<name>@fabula.local". Das Suffix ist nur ein
 // Platzhalter, damit Firebase eine E-Mail-Adresse hat. Es wird nie eine Mail verschickt.
-export const EMAIL_DOMAIN = "@fabula.local";
+const EMAIL_DOMAIN = "@fabula.local";
 export const GM_ID = "gm";
 
 // Wird erst erfüllt, wenn jemand angemeldet ist.

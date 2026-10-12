@@ -2,7 +2,6 @@
 
 #player-panel { display: flex; flex-direction: column; height: 900px; }
 body.is-gm #player-panel { display: none; }
-body:not(.is-gm) #party-panel { display: none; }
 
 .tex-char      { --tex: url("../assets/textures/character_box_grey.png"); }
 .tex-companion { --tex: url("../assets/textures/companion_box_grey.png"); }

@@ -1,6 +1,7 @@
 import { isGM } from "./role.js";
 import { textures } from "./assets.js";
-import { getCharacter, stateOf, partyOf, isLowHP, portraitUrl } from "./characters.js";
+import { getCharacter, stateOf, partyOf, isLowHP } from "./characters.js";
+import { el, textureImg, portraitImage } from "./dom.js";
 import { setCharacterState } from "./gameState.js";
 import { openEditor } from "./charEditor.js";
 import { addCharacterToScene } from "./scene.js";
@@ -18,20 +19,6 @@ let current = null;
 let blocks = [];            // Verweise auf die Elemente je Statusbox
 let builtKey = "";
 
-function el(tag, className, text) {
-    const e = document.createElement(tag);
-    if (className) e.className = className;
-    if (text !== undefined) e.textContent = text;
-    return e;
-}
-
-function icon(file, className) {
-    const img = el("img", className);
-    img.src = `${textures}/${file}`;
-    img.alt = "";
-    return img;
-}
-
 function conflictActive() {
     return !!(current && current.conflict && current.conflict.active);
 }
@@ -46,17 +33,13 @@ function buildBlock(c) {
 
     const pencil = el("button", "gm-box-pencil");
     pencil.title = "Maximale LP und GP anpassen";
-    pencil.appendChild(icon("pencil.png"));
+    pencil.appendChild(textureImg("pencil.png"));
     pencil.addEventListener("click", () => openEditor(c, current));
     root.appendChild(pencil);
 
     const portrait = el("div", "gm-box-portrait");
     portrait.title = "In die Szene setzen";
-    const img = el("img");
-    img.src = portraitUrl(c);
-    img.dataset.char = c.id;                       // für das Aufleuchten
-    img.addEventListener("error", () => { img.style.visibility = "hidden"; });
-    portrait.appendChild(img);
+    portrait.appendChild(portraitImage(c));
     portrait.addEventListener("click", () => addCharacterToScene(c.id));
     root.appendChild(portrait);
 
@@ -69,7 +52,7 @@ function buildBlock(c) {
 
     // Fabula-Punkte (32 x 32 Symbol, 32 x 32 Zahlenfeld)
     const foot = el("div", "gm-box-foot");
-    foot.appendChild(icon("fabula.png", "gm-fabula-icon"));
+    foot.appendChild(textureImg("fabula.png", "gm-fabula-icon"));
     const input = el("input", "gm-fabula-input");
     input.type = "number";
     input.min = "0";
@@ -85,10 +68,10 @@ function buildBlock(c) {
 
     // Zugkarten: Ass = Zug verfügbar (GO), Rückseite = Zug verbraucht
     const card1 = el("button", "gm-card");
-    const card1img = icon("ace_of_hearts.png");
+    const card1img = textureImg("ace_of_hearts.png");
     card1.appendChild(card1img);
     const card2 = el("button", "gm-card");           // zweite Karte ODER Plus
-    const card2img = icon("ace_of_hearts.png");
+    const card2img = textureImg("ace_of_hearts.png");
     const plus = el("span", "gm-plus", "+");
     card2.append(card2img, plus);
     foot.append(card1, card2);

@@ -1,6 +1,7 @@
 import { textures } from "./assets.js";
 import { getCharacterId, isGM } from "./role.js";
-import { getCharacter, stateOf, partyOf, isLowHP, portraitUrl } from "./characters.js";
+import { getCharacter, stateOf, partyOf, isLowHP } from "./characters.js";
+import { el, textureImg, portraitImage } from "./dom.js";
 import { setCharacterState, spendFabula, triggerEffect } from "./gameState.js";
 import { openEditor } from "./charEditor.js";
 
@@ -10,32 +11,10 @@ const companions = document.getElementById("pl-companions");
 let current = null;      // letzter Spielstand
 let own = null;          // Verweise auf die Elemente der eigenen Box
 
-function el(tag, className, text) {
-    const e = document.createElement(tag);
-    if (className) e.className = className;
-    if (text !== undefined) e.textContent = text;
-    return e;
-}
-
-function tex(file, className) {
-    const img = el("img", className);
-    img.src = `${textures}/${file}`;
-    img.alt = "";
-    return img;
-}
-
-function portraitImg(c) {
-    const img = el("img");
-    img.src = portraitUrl(c);
-    img.dataset.char = c.id;                 // für das Aufleuchten
-    img.addEventListener("error", () => { img.style.visibility = "hidden"; });
-    return img;
-}
-
 function iconButton(file, title, className = "") {
     const b = el("button", `icon-btn ${className}`);
     b.title = title;
-    b.appendChild(tex(file));
+    b.appendChild(textureImg(file));
     return b;
 }
 
@@ -91,14 +70,14 @@ function buildOwnBox(c) {
 
     // Portrait 256 x 256, 8 px unter der Kopfzeile und 8 px eingerückt
     const portrait = place(el("div", "pl-abs pl-portrait"), "left:8px; top:72px;");
-    portrait.appendChild(portraitImg(c));
+    portrait.appendChild(portraitImage(c));
 
     // Zugkarten (Höhe 96 px): GO = Ass, verbraucht = Rückseite
     const card1 = place(el("button", "pl-abs pl-card"), "left:296px; top:72px; z-index:1;");
-    const card1img = tex("ace_of_hearts.png");
+    const card1img = textureImg("ace_of_hearts.png");
     card1.appendChild(card1img);
     const card2 = place(el("button", "pl-abs pl-card"), "left:328px; top:104px; z-index:2;");
-    const card2img = tex("ace_of_hearts.png");
+    const card2img = textureImg("ace_of_hearts.png");
     card2.appendChild(card2img);
 
     // Inventarpunkte: Rucksack (Klick = ein Punkt weniger) und aktueller Stand
@@ -195,7 +174,7 @@ function updateCompanions(game) {
 
         box.appendChild(el("div", "pl-comp-name", c.name));
         const portrait = el("div", `pl-comp-portrait${st.turnsLeft <= 0 ? " gray" : ""}`);
-        portrait.appendChild(portraitImg(c));
+        portrait.appendChild(portraitImage(c));
         box.appendChild(portrait);
         companions.appendChild(box);
     }

@@ -58,7 +58,6 @@
 #panel { border: none; background: #1a1a1a; overflow: hidden; }
 #gm-panel { display: flex; flex-direction: column; height: 900px; }
 body:not(.is-gm) #gm-panel { display: none; }
-#party-panel { display: none; }
 
 .gm-row { display: flex; height: 64px; }
 .gm-gap { height: 8px; }
@@ -159,7 +158,3 @@ body:not(.is-gm) #gm-panel { display: none; }
 }
 .actor.selected .actor-flip { display: block; }
 body:not(.is-gm) .actor-flip { display: none !important; }
-
-/* Keine Platzhalter-Hintergründe mehr hinter den Sprites (nur das Bild selbst) */
-.actor-body { border: none; }
-.actor-body.player, .actor-body.monster { background: none; }

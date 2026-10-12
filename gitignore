@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+
+# Betriebssystem und Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Zwischenergebnisse der Werkzeuge (z. B. tools/gif_tool.py schreibt <name>_neu.gif)
+*_neu.gif
+
+# Sicherungen und Tests
+*.bak
+*.tmp
+assets_test.bin

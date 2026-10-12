@@ -1,6 +1,6 @@
 import { login, logout, onUser, idFromUser, GM_ID } from "./firebase.js";
 import { stopGameSubscription } from "./gameState.js";
-import { portraitUrl } from "./characters.js";
+import { el, portraitImage } from "./dom.js";
 
 const stepChoose = document.getElementById("login-choose");
 const stepCharacters = document.getElementById("login-characters");
@@ -13,13 +13,6 @@ const errorLabel = document.getElementById("login-error");
 
 let characters = [];     // aus data/characters.json (nur Spielercharaktere)
 let entered = false;
-
-function el(tag, className, text) {
-    const e = document.createElement(tag);
-    if (className) e.className = className;
-    if (text !== undefined) e.textContent = text;
-    return e;
-}
 
 function showStep(step) {
     [stepChoose, stepCharacters, stepPassword].forEach((s) => s.classList.add("hidden"));
@@ -60,11 +53,7 @@ function buildCard(c) {
     const card = el("div", "login-card");
 
     const frame = el("div", "login-frame");
-    const img = el("img");
-    img.src = portraitUrl(c);
-    img.alt = c.name;
-    img.addEventListener("error", () => { img.style.visibility = "hidden"; });
-    frame.appendChild(img);
+    frame.appendChild(portraitImage(c));
 
     const name = el("div", "login-name", c.name);
 

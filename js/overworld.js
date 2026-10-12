@@ -10,8 +10,8 @@ import {
 } from "./gameState.js";
 
 // Fog of War: Schleier über unbekannten Feldern
-const VEIL_PLAYER = "rgba(136, 82, 0, 0.6)";   // Felder neben dem Marker (Spieler)
-const VEIL_GM = "rgba(136, 82, 0, 0.4)";        // unbekannte Felder aus Sicht des GM (violett)
+const VEIL_PLAYER = "rgba(100, 100, 100, 0.6)";   // Felder neben dem Marker (Spieler)
+const VEIL_GM = "rgba(150, 60, 220, 0.3)";        // unbekannte Felder aus Sicht des GM (violett)
 
 const gameView = document.getElementById("game-view");
 
@@ -257,6 +257,7 @@ function acceptMove() {
         if (!arrived) setMoveRequest(req.x, req.y);
     });
 }
+
 function isValidTile(x, y) {
     return x >= 0 && x < mapWidth && y >= 0 && y < mapHeight;
 }

@@ -22,8 +22,6 @@ export const OVERWORLD_MUSIC = "overworld_travel";
 // Kartenfläche in Pixeln (siehe Layout)
 export const MAP_AREA = { width: 1440, height: 900 };
 
-// Dauer der Angriffs-/Zauber-/Heil-Effekte in Millisekunden (pro Charakter mit "effectMs" änderbar)
-export const EFFECT_MS = 1000;
 
 // ---- Startpositionen der Sprites in Szenen ----
 // Pixel im 1440 x 900 Dummy als [x, y]. Gemessen wird die untere Ecke des Sprites:
@@ -42,7 +40,7 @@ export const START_POSITIONS = {
 // ---- Position der Effekt-GIFs im Dummy ----
 // side = von welcher Seite gemessen, x/y = linke bzw. rechte untere Ecke, width = Breite in px
 export const EFFECT_POSITIONS = {
-    heal:   { side: "left",  x: 64, y: 8, width: 576 },
+    heal:   { side: "left",  x: 64, y: 128, width: 576 },
     attack: { side: "right", x: 64, y: 128, width: 576 },
     spell:  { side: "right", x: 64, y: 128, width: 576 }    // Zauber ("Magic")
 };
